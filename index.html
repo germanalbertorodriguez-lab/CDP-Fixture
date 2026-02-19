@@ -1408,28 +1408,50 @@ async function loadSponsors() {
 function renderSponsors() {
   const data = state.sponsors;
   const container = document.getElementById('sponsorsContainer');
-  if (!data || !data.length) {
-    container.innerHTML = '<div class="empty">Sin sponsors registrados</div>';
-    return;
-  }
+
+  // Datos de ejemplo para mostrar el diseño
+  const ejemplos = [
+    {
+      nombre: 'Club de Profesionales',
+      desc: 'El Club de Profesionales Justo José de Urquiza es una institución social y deportiva de Concepción del Uruguay que reúne a distintos grupos de profesionales de la ciudad.',
+      dir: 'C del Uruguay, Entre Ríos',
+      tel: '3442-457846'
+    }
+  ];
 
   let html = '';
-  const seen = new Set();
-  data.forEach(r => {
-    const name = (r['Sponsor'] || '').replace('➜ ', '');
-    if (seen.has(name)) return;
-    seen.add(name);
+  let sponsors = [];
+
+  if (data && data.length) {
+    const seen = new Set();
+    data.forEach(r => {
+      const name = (r['Sponsor'] || '').replace('➜ ', '').trim();
+      if (!name || seen.has(name)) return;
+      seen.add(name);
+      if (r['Informacion'] || r['Direccion'] || r['Telefono']) {
+        sponsors.push({ nombre: name, desc: r['Informacion'], dir: r['Direccion'], tel: r['Telefono'] });
+      }
+    });
+  }
+
+  // Si no hay sponsors con datos, usar ejemplos
+  if (!sponsors.length) sponsors = ejemplos;
+
+  sponsors.forEach(s => {
     html += `<div class="sponsor-card">
-      <div class="sponsor-name">${name}</div>
-      ${r['Informacion'] ? `<div class="sponsor-desc">${r['Informacion']}</div>` : ''}
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:42px;height:42px;background:var(--green-xlight);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">⭐</div>
+        <div class="sponsor-name" style="margin:0">${s.nombre}</div>
+      </div>
+      ${s.desc ? `<div class="sponsor-desc">${s.desc}</div>` : ''}
       <div class="sponsor-contact">
-        ${r['Direccion'] ? `<span>📍 ${r['Direccion']}</span>` : ''}
-        ${r['Telefono'] ? `<span>📱 ${r['Telefono']}</span>` : ''}
+        ${s.dir ? `<span>📍 ${s.dir}</span>` : ''}
+        ${s.tel ? `<span>📱 ${s.tel}</span>` : ''}
       </div>
     </div>`;
   });
 
-  container.innerHTML = html || '<div class="empty">Sin sponsors registrados</div>';
+  container.innerHTML = html;
 }
 
 // ============================================================
