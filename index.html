@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f1923">
+<meta name="description" content="Club de Profesionales CDP - Fixture y estadísticas">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>CDP — Club de Profesionales</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #4ade80;
+    --green-dark: #16a34a;
+    --green-glow: rgba(74, 222, 128, 0.15);
+    --bg: #0a0f14;
+    --bg2: #0f1923;
+    --bg3: #162030;
+    --bg4: #1e2d3d;
+    --text: #e8edf2;
+    --text-dim: #7a9ab5;
+    --text-dimmer: #4a6278;
+    --border: rgba(74, 222, 128, 0.12);
+    --border2: rgba(255,255,255,0.06);
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --gold: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,20,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--bg);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .header-info { flex: 1; }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+    margin-left: auto;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border2);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 8px;
+  }
+
+  .nav-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+
+  .nav-btn.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+
+  .nav-btn .nav-icon { font-size: 14px; }
+
+  /* MAIN */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-bottom: 32px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .card-header {
+    padding: 12px 16px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    color: var(--green);
+  }
+
+  .badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--green-glow);
+    color: var(--green);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+  }
+
+  .badge.red { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.25); }
+  .badge.yellow { background: rgba(251,191,36,0.1); color: var(--yellow); border-color: rgba(251,191,36,0.25); }
+  .badge.gray { background: rgba(122,154,181,0.1); color: var(--text-dim); border-color: rgba(122,154,181,0.2); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  /* FIXTURE */
+  .fecha-group { margin-bottom: 20px; }
+
+  .fecha-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--green);
+    padding: 6px 12px;
+    background: var(--green-glow);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .partido-row {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s;
+  }
+
+  .partido-row:hover { border-color: var(--border); }
+
+  .partido-row.jugado { border-left: 3px solid var(--green); }
+  .partido-row.pendiente { border-left: 3px solid var(--text-dimmer); }
+  .partido-row.senior { border-left: 3px solid var(--gold); }
+
+  .equipo-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+
+  .equipo-name.right { text-align: right; }
+
+  .resultado-box {
+    text-align: center;
+    min-width: 70px;
+  }
+
+  .score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .score.pendiente { color: var(--text-dimmer); font-size: 14px; }
+
+  .partido-meta {
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .partido-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border2);
+    font-size: 11px;
+    color: var(--text-dimmer);
+  }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .filter-tab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-tab:hover { border-color: var(--border); color: var(--text); }
+  .filter-tab.active { background: var(--green-glow); border-color: var(--border); color: var(--green); }
+
+  /* TABLA POSICIONES */
+  .standings-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .standings-table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .standings-table th:nth-child(2) { text-align: left; }
+  .standings-table th:first-child { width: 32px; }
+
+  .standings-table td {
+    padding: 9px 10px;
+    text-align: center;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .standings-table td:nth-child(2) { text-align: left; }
+
+  .standings-table tr:last-child td { border-bottom: none; }
+
+  .standings-table tr:hover td { background: var(--bg3); }
+
+  .pos-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--text-dim);
+  }
+
+  .pos-num.top { color: var(--green); }
+  .pos-num.bottom { color: var(--red); }
+
+  .team-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .team-shield {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: var(--bg4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .team-shield img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .team-name-cell {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .pts {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .stat-cell { color: var(--text-dim); }
+
+  .diff-pos { color: var(--green); }
+  .diff-neg { color: var(--red); }
+
+  /* GOLEADORES */
+  .scorer-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 12px;
+    transition: background 0.15s;
+  }
+
+  .scorer-row:hover { background: var(--bg3); }
+  .scorer-row:last-child { border-bottom: none; }
+
+  .scorer-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--text-dimmer);
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .scorer-rank.gold { color: var(--gold); }
+  .scorer-rank.silver { color: #94a3b8; }
+  .scorer-rank.bronze { color: #b45309; }
+
+  .scorer-info { flex: 1; min-width: 0; }
+
+  .scorer-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .scorer-team {
+    font-size: 11px;
+    color: var(--text-dimmer);
+    margin-top: 1px;
+  }
+
+  .scorer-goals {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .goals-label {
+    font-size: 10px;
+    color: var(--text-dimmer);
+    text-align: right;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* DISCIPLINA */
+  .disc-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 12px;
+    transition: background 0.15s;
+  }
+
+  .disc-row:hover { background: var(--bg3); }
+  .disc-row:last-child { border-bottom: none; }
+
+  .disc-info { flex: 1; min-width: 0; }
+
+  .disc-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .disc-team {
+    font-size: 11px;
+    color: var(--text-dimmer);
+    margin-top: 1px;
+  }
+
+  .disc-cards {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .card-icon {
+    width: 18px;
+    height: 24px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .card-icon.yellow-card { background: var(--yellow); color: #000; }
+  .card-icon.red-card { background: var(--red); color: #fff; }
+
+  .suspension-info {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .suspension-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .suspension-label {
+    font-size: 10px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.5px;
+  }
+
+  .habilitado-fecha {
+    font-size: 11px;
+    color: var(--green);
+    margin-top: 2px;
+  }
+
+  /* SPONSORS */
+  .sponsor-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .sponsor-card:hover { border-color: var(--border); }
+
+  .sponsor-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .sponsor-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .sponsor-contact {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-dimmer);
+  }
+
+  .sponsor-contact span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg3);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+  }
+
+  /* ERROR */
+  .error-box {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .error-icon { font-size: 32px; margin-bottom: 8px; }
+  .error-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--red); margin-bottom: 6px; }
+  .error-msg { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; }
+  .retry-btn {
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .retry-btn:hover { opacity: 0.85; }
+
+  /* EMPTY */
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-dimmer);
+    font-size: 13px;
+  }
+
+  /* CONFIG BANNER */
+  .config-banner {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--yellow);
+    line-height: 1.5;
+  }
+
+  .config-banner strong { font-weight: 700; }
+  .config-banner code {
+    background: rgba(245,158,11,0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  /* INPUT */
+  .input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .text-input {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .text-input:focus { border-color: var(--green); }
+  .text-input::placeholder { color: var(--text-dimmer); }
+
+  .submit-btn {
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .submit-btn:hover { opacity: 0.85; }
+
+  /* SEARCH */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px 10px 38px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--green); }
+  .search-wrap input::placeholder { color: var(--text-dimmer); }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dimmer);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  /* SKELETON */
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg3) 0%, var(--bg4) 50%, var(--bg3) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+  }
+
+  @keyframes shimmer {
+    to { background-position: -200% 0; }
+  }
+
+  .sk-row {
+    height: 56px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+  }
+
+  /* SCROLL top */
+  .scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 50;
+  }
+
+  .scroll-top.visible { opacity: 1; }
+
+  /* MOBILE tweaks */
+  @media (max-width: 480px) {
+    .main { padding: 12px; }
+    .standings-table th,
+    .standings-table td { padding: 7px 6px; font-size: 12px; }
+    .score { font-size: 18px; }
+    .equipo-name { font-size: 12px; }
+    .section-title { font-size: 22px; }
+  }
+
+  /* ZONE SECTION DIVIDER */
+  .zone-divider {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--text-dimmer);
+    text-transform: uppercase;
+    padding: 14px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .zone-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border2);
+  }
+
+  /* TABS row in standings */
+  .tab-row {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    margin-bottom: 14px;
+  }
+  .tab-row::-webkit-scrollbar { display: none; }
+
+  .tab-pill {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--text-dim);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s;
+  }
+
+  .tab-pill:hover { color: var(--text); }
+  .tab-pill.active { background: var(--green); color: var(--bg); border-color: var(--green); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-mark">CDP</div>
+    <div class="header-info">
+      <div class="header-title">Club de Profesionales</div>
+      <div class="header-subtitle">Concepción del Uruguay</div>
+    </div>
+    <div class="status-dot" id="statusDot" title="Conectado al Sheet"></div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('fixture')" id="nav-fixture">
+      <span class="nav-icon">📅</span> Fixture
+    </button>
+    <button class="nav-btn" onclick="showSection('posiciones')" id="nav-posiciones">
+      <span class="nav-icon">🏆</span> Posiciones
+    </button>
+    <button class="nav-btn" onclick="showSection('goleadores')" id="nav-goleadores">
+      <span class="nav-icon">⚽</span> Goleadores
+    </button>
+    <button class="nav-btn" onclick="showSection('disciplina')" id="nav-disciplina">
+      <span class="nav-icon">🟨</span> Disciplina
+    </button>
+    <button class="nav-btn" onclick="showSection('sponsors')" id="nav-sponsors">
+      <span class="nav-icon">⭐</span> Sponsors
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ===================== FIXTURE ===================== -->
+  <section class="section active" id="section-fixture">
+    <div class="section-header">
+      <div class="section-title">Fixture</div>
+      <div class="filter-tabs" id="fixtureFilters">
+        <button class="filter-tab active" onclick="filterFixture('todos', this)">Todos</button>
+        <button class="filter-tab" onclick="filterFixture('libres', this)">Libres</button>
+        <button class="filter-tab" onclick="filterFixture('senior', this)">Sénior</button>
+        <button class="filter-tab" onclick="filterFixture('pendiente', this)">Pendientes</button>
+      </div>
+    </div>
+    <div id="fixtureContainer">
+      <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando fixture...</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== POSICIONES ===================== -->
+  <section class="section" id="section-posiciones">
+    <div class="section-header">
+      <div class="section-title">Posiciones</div>
+    </div>
+    <div class="tab-row" id="posTab">
+      <button class="tab-pill active" onclick="showPos('general-libres', this)">General Libres</button>
+      <button class="tab-pill" onclick="showPos('zona-a-libres', this)">Zona A</button>
+      <button class="tab-pill" onclick="showPos('zona-b-libres', this)">Zona B</button>
+      <button class="tab-pill" onclick="showPos('general-senior', this)">General Sénior</button>
+      <button class="tab-pill" onclick="showPos('zona-a-senior', this)">Zona A Sénior</button>
+      <button class="tab-pill" onclick="showPos('zona-b-senior', this)">Zona B Sénior</button>
+      <button class="tab-pill" onclick="showPos('z-camp', this)">Z. Campeonato</button>
+      <button class="tab-pill" onclick="showPos('z-desc', this)">Z. Descenso</button>
+      <button class="tab-pill" onclick="showPos('z-asc', this)">Z. Ascenso B</button>
+      <button class="tab-pill" onclick="showPos('z-promo', this)">Z. Promo B</button>
+    </div>
+    <div id="posContainer">
+      <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando posiciones...</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== GOLEADORES ===================== -->
+  <section class="section" id="section-goleadores">
+    <div class="section-header">
+      <div class="section-title">Goleadores</div>
+    </div>
+    <div class="tab-row">
+      <button class="tab-pill active" onclick="showScorers('libres-a', this)">Libres A</button>
+      <button class="tab-pill" onclick="showScorers('libres-b', this)">Libres B</button>
+      <button class="tab-pill" onclick="showScorers('senior', this)">Sénior</button>
+    </div>
+    <div id="scorersContainer">
+      <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando goleadores...</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== DISCIPLINA ===================== -->
+  <section class="section" id="section-disciplina">
+    <div class="section-header">
+      <div class="section-title">Disciplina</div>
+    </div>
+    <div class="tab-row">
+      <button class="tab-pill active" onclick="showDisc('rojas', this)">🟥 Rojas</button>
+      <button class="tab-pill" onclick="showDisc('amarillas-a', this)">🟨 Libres A</button>
+      <button class="tab-pill" onclick="showDisc('amarillas-b', this)">🟨 Libres B</button>
+      <button class="tab-pill" onclick="showDisc('amarillas-senior', this)">🟨 Sénior</button>
+    </div>
+    <div id="discContainer">
+      <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando disciplina...</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== SPONSORS ===================== -->
+  <section class="section" id="section-sponsors">
+    <div class="section-header">
+      <div class="section-title">Sponsors</div>
+    </div>
+    <div id="sponsorsContainer">
+      <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando sponsors...</div></div>
+    </div>
+  </section>
+
+</main>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN — REEMPLAZÁ CON TU SHEET ID
+// ============================================================
+const SHEET_ID = '1pmv5pDVTfa8gCYQPz1ZbqgyyM7zNtd7vELtN9vuYEY0';
+const PUBLISHED_ID = '2PACX-1vSUVv4GkwAreYqXyaD6LOpVLpjQTHw1vy4z_6N3xj2wjphMUcJTPy-MJQXlX-ySD6-QCB8-PWsktFKV';
+// Ejemplo: '1pmv5pDVTfa8gCYQPz1ZbqgyyM7zNtd7vELtN9vuYEY0'
+
+const API_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+const API_BASE_PUB = `https://docs.google.com/spreadsheets/d/e/${PUBLISHED_ID}/pub?output=csv&gid=`;
+
+// ============================================================
+// ESTADO
+// ============================================================
+let state = {
+  fixture: null,
+  posiciones: {},
+  goleadores: {},
+  disciplina: {},
+  sponsors: null,
+  currentFixtureFilter: 'todos',
+  currentPos: 'general-libres',
+  currentScorers: 'libres-a',
+  currentDisc: 'rojas'
+};
+
+// ============================================================
+// HELPERS — Google Visualization API JSON parser
+// ============================================================
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const text = await res.text();
+  if (!text.includes('google.visualization')) throw new Error('Respuesta invalida');
+  const json = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+  if (!json.table) throw new Error('Sin datos');
+  return parseGvizTable(json.table);
+}
+
+function parseGvizTable(table) {
+  if (!table || !table.rows) return [];
+  const cols = table.cols.map(c => c.label || '');
+  return table.rows.map(row => {
+    const obj = {};
+    row.c.forEach((cell, i) => {
+      obj[cols[i]] = cell ? cell.v : null;
+    });
+    return obj;
+  });
+}
+
+function gvizCellValue(cell) {
+  return cell ? cell.v : null;
+}
+
+// Fetch raw — returns rows as arrays
+async function fetchSheetRaw(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const text = await res.text();
+  if (!text.includes('google.visualization')) throw new Error('Respuesta invalida');
+  const json = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+  const table = json.table;
+  if (!table || !table.rows) return { cols: [], rows: [] };
+  const cols = table.cols.map(c => c.label || '');
+  const rows = table.rows.map(row => row.c ? row.c.map(c => c ? c.v : null) : []);
+  return { cols, rows };
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+
+  // Lazy load
+  if (id === 'fixture' && !state.fixture) loadFixture();
+  if (id === 'posiciones' && !state.posiciones['general-libres']) loadPosiciones();
+  if (id === 'goleadores' && !state.goleadores['libres-a']) loadGoleadores();
+  if (id === 'disciplina' && !state.disciplina['rojas']) loadDisciplina();
+  if (id === 'sponsors' && !state.sponsors) loadSponsors();
+}
+
+// ============================================================
+// FIXTURE
+// ============================================================
+async function loadFixture() {
+  try {
+    const { cols, rows } = await fetchSheetRaw('Fixture');
+    // cols: Fecha, Cancha, Partido, Resultado, Cancha y Hora, Jugado, Color, ...
+    state.fixture = rows.filter(r => r[2] && String(r[2]).trim() !== '').map(r => ({
+      fecha: r[0],
+      cancha: r[1],
+      partido: r[2],
+      resultado: r[3],
+      canchaHora: r[4],
+      jugado: r[5],
+      isSenior: r[2] ? String(r[2]).includes('(S)') : false,
+      fechaDate: r[13]
+    }));
+    renderFixture();
+  } catch(e) {
+    showError('fixtureContainer', 'No se pudo cargar el fixture', loadFixture);
+  }
+}
+
+function filterFixture(filter, btn) {
+  document.querySelectorAll('#fixtureFilters .filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.currentFixtureFilter = filter;
+  renderFixture();
+}
+
+function renderFixture() {
+  const container = document.getElementById('fixtureContainer');
+  let items = state.fixture || [];
+
+  if (state.currentFixtureFilter === 'libres') items = items.filter(p => !p.isSenior);
+  if (state.currentFixtureFilter === 'senior') items = items.filter(p => p.isSenior);
+  if (state.currentFixtureFilter === 'pendiente') items = items.filter(p => p.jugado !== 'Jugado' && p.jugado !== 'NR');
+
+  if (!items.length) {
+    container.innerHTML = '<div class="empty">No hay partidos en esta vista</div>';
+    return;
+  }
+
+  // Group by Fecha (round)
+  const groups = {};
+  items.forEach(p => {
+    const key = p.fecha ? 'Fecha ' + p.fecha : 'Sin fecha';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(p);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([fecha, partidos]) => {
+    html += `<div class="fecha-group">
+      <div class="fecha-label">${fecha}</div>`;
+    partidos.forEach(p => {
+      const jugado = p.jugado === 'Jugado';
+      const nrCase = p.jugado === 'NR';
+      const rowClass = p.isSenior ? 'senior' : (jugado || nrCase ? 'jugado' : 'pendiente');
+      let local = '', visitante = '', result = '';
+
+      if (p.partido) {
+        // Format: "F1. Equipo A vs Equipo B"
+        const match = String(p.partido).match(/^[^.]+\.\s*(.+?)\s+vs\s+(.+)$/i);
+        if (match) { local = match[1]; visitante = match[2]; }
+        else { local = p.partido; visitante = ''; }
+      }
+
+      if (jugado && p.resultado) {
+        result = `<div class="score">${p.resultado}</div>`;
+      } else if (nrCase) {
+        result = `<div class="score pendiente">NR</div>`;
+      } else {
+        result = `<div class="score pendiente">vs</div>`;
+      }
+
+      html += `<div class="partido-row ${rowClass}">
+        <div class="equipo-name">${local}</div>
+        <div class="resultado-box">${result}${p.canchaHora ? `<div class="partido-meta">${p.canchaHora}</div>` : ''}</div>
+        <div class="equipo-name right">${visitante}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ============================================================
+// POSICIONES
+// ============================================================
+const POS_SHEETS = {
+  'general-libres': 'Tabla de Pos LIBRES',
+  'zona-a-libres': 'Pos Libres ZONA A',
+  'zona-b-libres': 'Pos Libres ZONA B',
+  'general-senior': 'Tabla de Pos SENIOR',
+  'zona-a-senior': 'Pos Senior ZONA A',
+  'zona-b-senior': 'Pos Senior ZONA B',
+  'z-camp': 'Z. Campeonato A',
+  'z-desc': 'Z. Descenso A',
+  'z-asc': 'Z. Ascenso B',
+  'z-promo': 'Z. Promo B'
+};
+
+async function loadPosiciones() {
+  await loadPosView('general-libres');
+}
+
+async function showPos(view, btn) {
+  document.querySelectorAll('#posTab .tab-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.currentPos = view;
+  if (state.posiciones[view]) {
+    renderPos(view);
+  } else {
+    document.getElementById('posContainer').innerHTML =
+      '<div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando...</div></div>';
+    await loadPosView(view);
+  }
+}
+
+async function loadPosView(view) {
+  try {
+    const sheetName = POS_SHEETS[view];
+    const data = await fetchSheet(sheetName);
+    state.posiciones[view] = data.filter(r => r['Equipo'] || r['Equipo '] || r['Equipos']);
+    renderPos(view);
+  } catch(e) {
+    showError('posContainer', 'No se pudo cargar la tabla', () => loadPosView(view));
+  }
+}
+
+function renderPos(view) {
+  const data = state.posiciones[view];
+  if (!data || !data.length) {
+    document.getElementById('posContainer').innerHTML = '<div class="empty">Sin datos disponibles</div>';
+    return;
+  }
+
+  const isGeneral = view.includes('general');
+  const isSenior = view.includes('senior');
+  const totalRows = data.length;
+
+  let html = `<div class="card">
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Equipo</th>
+          <th>PJ</th>
+          <th>Pts</th>
+          <th>PG</th>
+          <th>PE</th>
+          <th>PP</th>
+          <th>GF</th>
+          <th>GC</th>
+          <th>Dif</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  data.forEach((row, i) => {
+    const pos = row['Posicion'] || row['Pos'] || row['Pos '] || (i + 1);
+    const equipo = row['Equipo'] || row['Equipo '] || row['Equipos'] || '-';
+    const pj = row['PJ'] ?? '-';
+    const pts = row['Puntos'] ?? '-';
+    const pg = row['PG'] ?? '-';
+    const pe = row['PE'] ?? '-';
+    const pp = row['PP'] ?? '-';
+    const gf = row['GF'] ?? '-';
+    const gc = row['GC'] ?? '-';
+    const dif = (row['Diferencia'] || row['Dif'] || row['DIF']);
+
+    const posClass = i === 0 ? 'top' : (i >= totalRows - 2 ? 'bottom' : '');
+    const difClass = dif > 0 ? 'diff-pos' : (dif < 0 ? 'diff-neg' : '');
+    const initials = equipo.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+    html += `<tr>
+      <td><div class="pos-num ${posClass}">${pos}</div></td>
+      <td>
+        <div class="team-cell">
+          <div class="team-shield">${initials}</div>
+          <div class="team-name-cell">${equipo}</div>
+        </div>
+      </td>
+      <td class="stat-cell">${pj}</td>
+      <td><div class="pts">${pts}</div></td>
+      <td class="stat-cell">${pg}</td>
+      <td class="stat-cell">${pe}</td>
+      <td class="stat-cell">${pp}</td>
+      <td class="stat-cell">${gf}</td>
+      <td class="stat-cell">${gc}</td>
+      <td class="${difClass}">${dif !== undefined && dif !== null ? (dif > 0 ? '+' + dif : dif) : '-'}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  document.getElementById('posContainer').innerHTML = html;
+}
+
+// ============================================================
+// GOLEADORES
+// ============================================================
+const SCORER_SHEETS = {
+  'libres-a': 'Goleadores LIBRES A',
+  'libres-b': 'Goleadores LIBRES B',
+  'senior': 'Goleadores SENIOR'
+};
+
+async function loadGoleadores() {
+  await loadScorersView('libres-a');
+}
+
+async function showScorers(view, btn) {
+  document.querySelectorAll('#section-goleadores .tab-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.currentScorers = view;
+  if (state.goleadores[view]) {
+    renderScorers(view);
+  } else {
+    document.getElementById('scorersContainer').innerHTML =
+      '<div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando...</div></div>';
+    await loadScorersView(view);
+  }
+}
+
+async function loadScorersView(view) {
+  try {
+    const sheetName = SCORER_SHEETS[view];
+    const data = await fetchSheet(sheetName);
+    const key = view === 'senior' ? 'Total' : 'Total';
+    const processed = data
+      .filter(r => r['Jugador'] && r[key] > 0)
+      .sort((a, b) => (b[key] || 0) - (a[key] || 0))
+      .slice(0, 40);
+    state.goleadores[view] = processed;
+    renderScorers(view);
+  } catch(e) {
+    showError('scorersContainer', 'No se pudo cargar goleadores', () => loadScorersView(view));
+  }
+}
+
+function renderScorers(view) {
+  const data = state.goleadores[view];
+  if (!data || !data.length) {
+    document.getElementById('scorersContainer').innerHTML = '<div class="empty">Sin datos disponibles</div>';
+    return;
+  }
+
+  let html = '<div class="card">';
+  data.forEach((p, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+    const goals = p['Total'] || 0;
+    html += `<div class="scorer-row">
+      <div class="scorer-rank ${rankClass}">${rank}</div>
+      <div class="scorer-info">
+        <div class="scorer-name">${p['Jugador'] || '-'}</div>
+        <div class="scorer-team">${p['Equipo'] || '-'}</div>
+      </div>
+      <div>
+        <div class="scorer-goals">${goals}</div>
+        <div class="goals-label">goles</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('scorersContainer').innerHTML = html;
+}
+
+// ============================================================
+// DISCIPLINA
+// ============================================================
+const DISC_SHEETS = {
+  'rojas': 'Tarjetas ROJAS',
+  'amarillas-a': 'Amarillas LIBRES A',
+  'amarillas-b': 'Amarillas LIBRES B',
+  'amarillas-senior': 'Amarillas SENIOR'
+};
+
+async function loadDisciplina() {
+  await loadDiscView('rojas');
+}
+
+async function showDisc(view, btn) {
+  document.querySelectorAll('#section-disciplina .tab-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.currentDisc = view;
+  if (state.disciplina[view]) {
+    renderDisc(view);
+  } else {
+    document.getElementById('discContainer').innerHTML =
+      '<div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando...</div></div>';
+    await loadDiscView(view);
+  }
+}
+
+async function loadDiscView(view) {
+  try {
+    const sheetName = DISC_SHEETS[view];
+    const data = await fetchSheet(sheetName);
+    state.disciplina[view] = data.filter(r => r['Jugador'] && r['Jugador'] !== '');
+    renderDisc(view);
+  } catch(e) {
+    showError('discContainer', 'No se pudo cargar disciplina', () => loadDiscView(view));
+  }
+}
+
+function renderDisc(view) {
+  const data = state.disciplina[view];
+  if (!data || !data.length) {
+    document.getElementById('discContainer').innerHTML = '<div class="empty">Sin sanciones registradas</div>';
+    return;
+  }
+
+  const isRojas = view === 'rojas';
+  let html = '<div class="card">';
+
+  if (isRojas) {
+    data.forEach(r => {
+      const fechaHab = r['Habilitado FECHA'];
+      const partidos = r['Partidos'];
+      const articulo = r['Artículo'] || r['Articulo'] || '';
+      html += `<div class="disc-row">
+        <div class="disc-info">
+          <div class="disc-name">${r['Jugador'] || '-'}</div>
+          <div class="disc-team">${r['Equipo'] || '-'} ${articulo ? '· Art. ' + articulo : ''}</div>
+        </div>
+        <div class="suspension-info">
+          <div class="suspension-num">${partidos || '-'}</div>
+          <div class="suspension-label">partido${partidos > 1 ? 's' : ''}</div>
+          ${fechaHab ? `<div class="habilitado-fecha">Hab. F${fechaHab}</div>` : ''}
+        </div>
+      </div>`;
+    });
+  } else {
+    // Amarillas — sort by total desc
+    const sorted = [...data]
+      .sort((a, b) => (b['Total'] || 0) - (a['Total'] || 0))
+      .filter(r => (r['Total'] || 0) > 0);
+
+    sorted.forEach(r => {
+      const total = r['Total'] || 0;
+      const cards = Array.from({length: Math.min(total, 10)}, () =>
+        `<span class="card-icon yellow-card">A</span>`).join('');
+      html += `<div class="disc-row">
+        <div class="disc-info">
+          <div class="disc-name">${r['Jugador'] || '-'}</div>
+          <div class="disc-team">${r['Equipo'] || '-'}</div>
+        </div>
+        <div class="disc-cards">${cards}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--yellow);width:28px;text-align:right">${total}</div>
+      </div>`;
+    });
+
+    if (!sorted.length) html += '<div class="empty" style="padding:20px">Sin amarillas registradas</div>';
+  }
+
+  html += '</div>';
+  document.getElementById('discContainer').innerHTML = html;
+}
+
+// ============================================================
+// SPONSORS
+// ============================================================
+async function loadSponsors() {
+  try {
+    const data = await fetchSheet('Nuestros Sponsors');
+    state.sponsors = data.filter(r => r['Sponsor']);
+    renderSponsors();
+  } catch(e) {
+    showError('sponsorsContainer', 'No se pudo cargar sponsors', loadSponsors);
+  }
+}
+
+function renderSponsors() {
+  const data = state.sponsors;
+  const container = document.getElementById('sponsorsContainer');
+  if (!data || !data.length) {
+    container.innerHTML = '<div class="empty">Sin sponsors registrados</div>';
+    return;
+  }
+
+  let html = '';
+  const seen = new Set();
+  data.forEach(r => {
+    const name = (r['Sponsor'] || '').replace('➜ ', '');
+    if (seen.has(name)) return;
+    seen.add(name);
+    html += `<div class="sponsor-card">
+      <div class="sponsor-name">${name}</div>
+      ${r['Informacion'] ? `<div class="sponsor-desc">${r['Informacion']}</div>` : ''}
+      <div class="sponsor-contact">
+        ${r['Direccion'] ? `<span>📍 ${r['Direccion']}</span>` : ''}
+        ${r['Telefono'] ? `<span>📱 ${r['Telefono']}</span>` : ''}
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html || '<div class="empty">Sin sponsors registrados</div>';
+}
+
+// ============================================================
+// ERROR HELPER
+// ============================================================
+function showError(containerId, msg, retryFn) {
+  const isSheetNotConfigured = SHEET_ID === 'TU_SHEET_ID_AQUI';
+  document.getElementById(containerId).innerHTML = `
+    <div class="error-box">
+      <div class="error-icon">${isSheetNotConfigured ? '⚙️' : '⚠️'}</div>
+      <div class="error-title">${isSheetNotConfigured ? 'Configuración requerida' : 'Error de conexión'}</div>
+      <div class="error-msg">
+        ${isSheetNotConfigured
+          ? 'Necesitás reemplazar <code>TU_SHEET_ID_AQUI</code> en el código con el ID de tu Google Sheet.<br><br>El ID está en la URL del sheet: <code>docs.google.com/spreadsheets/d/<strong>ESTE_ES_EL_ID</strong>/edit</code>'
+          : msg + '. Verificá que el Sheet sea público (cualquiera con el link puede ver).'
+        }
+      </div>
+      ${!isSheetNotConfigured ? `<button class="retry-btn" onclick="(${retryFn.toString()})()">Reintentar</button>` : ''}
+    </div>`;
+}
+
+// ============================================================
+// SCROLL TO TOP
+// ============================================================
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTopBtn');
+  btn.classList.toggle('visible', window.scrollY > 300);
+});
+
+// ============================================================
+// SERVICE WORKER
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Check sheet config
+  if (SHEET_ID === 'TU_SHEET_ID_AQUI') {
+    document.getElementById('statusDot').style.background = 'var(--yellow)';
+    document.getElementById('statusDot').style.boxShadow = '0 0 8px var(--yellow)';
+  }
+  loadFixture();
+});
+</script>
+</body>
+</html>
