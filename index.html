@@ -1360,7 +1360,7 @@ function renderDisc(view) {
         </div>
         <div class="suspension-info">
           <div class="suspension-num">${partidos || '-'}</div>
-          <div class="suspension-label">partido${partidos > 1 ? 's' : ''}</div>
+          <div class="suspension-label">${typeof partidos === 'number' && partidos > 1 ? 'partidos' : 'partido'}</div>
           ${fechaHab ? `<div class="habilitado-fecha">Hab. F${fechaHab}</div>` : ''}
         </div>
       </div>`;
