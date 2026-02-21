@@ -838,6 +838,47 @@
     border-color: var(--green);
     box-shadow: 0 4px 12px rgba(22,163,74,0.25);
   }
+
+  /* TEAM SELECTOR */
+  .team-select-wrap {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  .team-select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    padding: 11px 14px 11px 40px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s;
+    box-shadow: var(--shadow-sm);
+    appearance: none;
+    cursor: pointer;
+  }
+  .team-select:focus { border-color: var(--green); }
+  .team-select-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  .team-select-arrow {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dimmer);
+    font-size: 12px;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -888,6 +929,44 @@
 
       </div>
     </div>
+    <div class="team-select-wrap">
+      <span class="team-select-icon">🛡️</span>
+      <select class="team-select" id="equipoSelect" onchange="filterByEquipo(this.value)">
+        <option value="">Todos los equipos</option>
+        <option value="Abogados A">Abogados A</option>
+        <option value="Abogados A (S)">Abogados A (S)</option>
+        <option value="Abogados AR">Abogados AR</option>
+        <option value="Abogados B">Abogados B</option>
+        <option value="Arquitectos">Arquitectos</option>
+        <option value="Arquitectos (S)">Arquitectos (S)</option>
+        <option value="Contadores A">Contadores A</option>
+        <option value="Contadores A (S)">Contadores A (S)</option>
+        <option value="Contadores Z">Contadores Z</option>
+        <option value="Contadores Z (S)">Contadores Z (S)</option>
+        <option value="Docentes A">Docentes A</option>
+        <option value="Docentes A (S)">Docentes A (S)</option>
+        <option value="Docentes B">Docentes B</option>
+        <option value="Docentes B (S)">Docentes B (S)</option>
+        <option value="Docentes E">Docentes E</option>
+        <option value="Docentes F (S)">Docentes F (S)</option>
+        <option value="Docentes T (S)">Docentes T (S)</option>
+        <option value="Docentes W">Docentes W</option>
+        <option value="Docentes X (S)">Docentes X (S)</option>
+        <option value="Ingenieros">Ingenieros</option>
+        <option value="Ingenieros S">Ingenieros S</option>
+        <option value="Licenciados (S)">Licenciados (S)</option>
+        <option value="Maestros">Maestros</option>
+        <option value="Profesores">Profesores</option>
+        <option value="Psicólogos">Psicólogos</option>
+        <option value="Salud B">Salud B</option>
+        <option value="Salud B (S)">Salud B (S)</option>
+        <option value="Salud F">Salud F</option>
+        <option value="Salud F (S)">Salud F (S)</option>
+        <option value="Salud T">Salud T</option>
+        <option value="Técnicos A">Técnicos A</option>
+      </select>
+      <span class="team-select-arrow">▾</span>
+    </div>
     <div id="fixtureContainer">
       <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando fixture...</div></div>
     </div>
@@ -918,6 +997,11 @@
       <button class="tab-pill active" onclick="showScorers('libres-a', this)">Libres A</button>
       <button class="tab-pill" onclick="showScorers('libres-b', this)">Libres B</button>
       <button class="tab-pill" onclick="showScorers('senior', this)">Sénior</button>
+    </div>
+    <div class="search-wrap" id="scorerSearchWrap" style="display:none">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="scorerSearch" placeholder="Buscar jugador..." 
+             oninput="filterScorers(this.value)" autocomplete="off">
     </div>
     <div id="scorersContainer">
       <div class="loading"><div class="loading-spinner"></div><div class="loading-text">Cargando goleadores...</div></div>
@@ -1096,7 +1180,8 @@ let state = {
   currentFixtureFilter: 'todos',
   currentPos: 'general-libres',
   currentScorers: 'libres-a',
-  currentDisc: 'rojas'
+  currentDisc: 'rojas',
+  currentEquipo: ''
 };
 
 // ============================================================
@@ -1191,6 +1276,12 @@ function filterFixture(filter, btn) {
   renderFixture();
 }
 
+function filterByEquipo(equipo) {
+  state.currentEquipo = equipo;
+  // Resetear el filtro de categoría al 'todos' si se elige un equipo
+  renderFixture();
+}
+
 function renderFixture() {
   const container = document.getElementById('fixtureContainer');
   let items = state.fixture || [];
@@ -1198,6 +1289,14 @@ function renderFixture() {
   if (state.currentFixtureFilter === 'libres') items = items.filter(p => !p.isSenior);
   if (state.currentFixtureFilter === 'senior') items = items.filter(p => p.isSenior);
   if (state.currentFixtureFilter === 'pendiente') items = items.filter(p => p.jugado !== 'Jugado' && p.jugado !== 'NR');
+  // Filtro por equipo
+  if (state.currentEquipo) {
+    const eq = state.currentEquipo.toLowerCase();
+    items = items.filter(p => {
+      const partido = String(p.partido || '').toLowerCase();
+      return partido.includes(eq);
+    });
+  }
 
   if (!items.length) {
     container.innerHTML = '<div class="empty">No hay partidos en esta vista</div>';
@@ -1409,6 +1508,15 @@ async function loadScorersView(view) {
   }
 }
 
+function filterScorers(query) {
+  const q = query.trim().toLowerCase();
+  const rows = document.querySelectorAll('#scorersContainer .scorer-row');
+  rows.forEach(row => {
+    const name = row.querySelector('.scorer-name')?.textContent.toLowerCase() || '';
+    row.style.display = (!q || name.includes(q)) ? '' : 'none';
+  });
+}
+
 function renderScorers(view) {
   const data = state.goleadores[view];
   if (!data || !data.length) {
@@ -1438,6 +1546,8 @@ function renderScorers(view) {
   });
   html += '</div>';
   document.getElementById('scorersContainer').innerHTML = html;
+  document.getElementById('scorerSearchWrap').style.display = '';
+  document.getElementById('scorerSearch').value = '';
 }
 
 // ============================================================
