@@ -1,24 +1,14 @@
 {
-  "name": "CDP — Club de Profesionales",
+  "name": "Fixture CDP",
   "short_name": "CDP",
-  "description": "Fixture y estadísticas del Club de Profesionales de Concepción del Uruguay",
-  "start_url": "/",
+  "description": "Club de Profesionales CDP - Fixture y estadísticas",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0a0f14",
+  "background_color": "#ffffff",
   "theme_color": "#0f1923",
-  "orientation": "portrait-primary",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "categories": ["sports"],
-  "lang": "es"
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
 }
