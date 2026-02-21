@@ -929,41 +929,45 @@
 
       </div>
     </div>
-    <div class="team-select-wrap">
+        <div class="team-select-wrap">
       <span class="team-select-icon">🛡️</span>
       <select class="team-select" id="equipoSelect" onchange="filterByEquipo(this.value)">
         <option value="">Todos los equipos</option>
-        <option value="Abogados A">Abogados A</option>
-        <option value="Abogados A (S)">Abogados A (S)</option>
-        <option value="Abogados AR">Abogados AR</option>
-        <option value="Abogados B">Abogados B</option>
-        <option value="Arquitectos">Arquitectos</option>
-        <option value="Arquitectos (S)">Arquitectos (S)</option>
-        <option value="Contadores A">Contadores A</option>
-        <option value="Contadores A (S)">Contadores A (S)</option>
-        <option value="Contadores Z">Contadores Z</option>
-        <option value="Contadores Z (S)">Contadores Z (S)</option>
-        <option value="Docentes A">Docentes A</option>
-        <option value="Docentes A (S)">Docentes A (S)</option>
-        <option value="Docentes B">Docentes B</option>
-        <option value="Docentes B (S)">Docentes B (S)</option>
-        <option value="Docentes E">Docentes E</option>
-        <option value="Docentes F (S)">Docentes F (S)</option>
-        <option value="Docentes T (S)">Docentes T (S)</option>
-        <option value="Docentes W">Docentes W</option>
-        <option value="Docentes X (S)">Docentes X (S)</option>
-        <option value="Ingenieros">Ingenieros</option>
-        <option value="Ingenieros S">Ingenieros S</option>
-        <option value="Licenciados (S)">Licenciados (S)</option>
-        <option value="Maestros">Maestros</option>
-        <option value="Profesores">Profesores</option>
-        <option value="Psicólogos">Psicólogos</option>
-        <option value="Salud B">Salud B</option>
-        <option value="Salud B (S)">Salud B (S)</option>
-        <option value="Salud F">Salud F</option>
-        <option value="Salud F (S)">Salud F (S)</option>
-        <option value="Salud T">Salud T</option>
-        <option value="Técnicos A">Técnicos A</option>
+        <optgroup label="── LIBRES ──">
+          <option value="Abogados A">Abogados A</option>
+          <option value="Abogados AR">Abogados AR</option>
+          <option value="Abogados B">Abogados B</option>
+          <option value="Arquitectos">Arquitectos</option>
+          <option value="Contadores A">Contadores A</option>
+          <option value="Contadores Z">Contadores Z</option>
+          <option value="Docentes A">Docentes A</option>
+          <option value="Docentes B">Docentes B</option>
+          <option value="Docentes E">Docentes E</option>
+          <option value="Docentes W">Docentes W</option>
+          <option value="Ingenieros">Ingenieros</option>
+          <option value="Ingenieros S">Ingenieros S</option>
+          <option value="Maestros">Maestros</option>
+          <option value="Profesores">Profesores</option>
+          <option value="Psicólogos">Psicólogos</option>
+          <option value="Salud B">Salud B</option>
+          <option value="Salud F">Salud F</option>
+          <option value="Salud T">Salud T</option>
+          <option value="Tecnicos A">Tecnicos A</option>
+        </optgroup>
+        <optgroup label="── SENIOR ──">
+          <option value="Abogados A (S)">Abogados A (S)</option>
+          <option value="Arquitectos (S)">Arquitectos (S)</option>
+          <option value="Contadores A (S)">Contadores A (S)</option>
+          <option value="Contadores Z (S)">Contadores Z (S)</option>
+          <option value="Docentes A (S)">Docentes A (S)</option>
+          <option value="Docentes B (S)">Docentes B (S)</option>
+          <option value="Docentes F (S)">Docentes F (S)</option>
+          <option value="Docentes T (S)">Docentes T (S)</option>
+          <option value="Docentes X (S)">Docentes X (S)</option>
+          <option value="Licenciados (S)">Licenciados (S)</option>
+          <option value="Salud B (S)">Salud B (S)</option>
+          <option value="Salud F (S)">Salud F (S)</option>
+        </optgroup>
       </select>
       <span class="team-select-arrow">▾</span>
     </div>
@@ -1289,12 +1293,16 @@ function renderFixture() {
   if (state.currentFixtureFilter === 'libres') items = items.filter(p => !p.isSenior);
   if (state.currentFixtureFilter === 'senior') items = items.filter(p => p.isSenior);
   if (state.currentFixtureFilter === 'pendiente') items = items.filter(p => p.jugado !== 'Jugado' && p.jugado !== 'NR');
-  // Filtro por equipo
+  // Filtro por equipo — match exacto contra local y visitante
   if (state.currentEquipo) {
-    const eq = state.currentEquipo.toLowerCase();
+    const eqNorm = state.currentEquipo.trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // quitar tildes
     items = items.filter(p => {
-      const partido = String(p.partido || '').toLowerCase();
-      return partido.includes(eq);
+      if (!p.partido) return false;
+      const m = String(p.partido).match(/^[^.]+\.\s*(.+?)\s+vs\s+(.+)$/i);
+      if (!m) return false;
+      const norm = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return norm(m[1]) === eqNorm || norm(m[2]) === eqNorm;
     });
   }
 
